@@ -1,0 +1,30 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int maxDifference(const std::vector<int>& arr) {
+    if (arr.empty()) {
+        return 0; // or throw an exception if an empty array is not expected
+    }
+
+    int minElement = arr[0];
+    int maxDiff = arr[1] - arr[0];
+
+    for (size_t i = 1; i < arr.size(); ++i) {
+        if (arr[i] - minElement > maxDiff) {
+            maxDiff = arr[i] - minElement;
+        }
+
+        if (arr[i] < minElement) {
+            minElement = arr[i];
+        }
+    }
+
+    return maxDiff;
+}
+
+int main() {
+    std::vector<int> arr = {2, 3, 10, 6, 4, 8, 1};
+    std::cout << "The maximum difference between any two elements in the array is " << maxDifference(arr) << std::endl;
+    return 0;
+}
