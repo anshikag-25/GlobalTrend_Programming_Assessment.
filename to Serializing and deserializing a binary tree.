@@ -1,0 +1,92 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <queue>
+#include <algorithm>
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+class Codec {
+public:
+    // Encodes a tree to a single string.
+    std::string serialize(TreeNode* root) {
+        if (!root) return "#";
+        return std::to_string(root->val) + "," + serialize(root->left) + "," + serialize(root->right);
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(const std::string& data) {
+        std::queue<std::string> nodes;
+        std::stringstream ss(data);
+        std::string node;
+        while (std::getline(ss, node, ',')) {
+            nodes.push(node);
+        }
+        return deserializeHelper(nodes);
+    }
+
+private:
+    TreeNode* deserializeHelper(std::queue<std::string>& nodes) {
+        std::string val = nodes.front();
+        nodes.pop();
+        if (val == "#") return nullptr;
+        TreeNode* root = new TreeNode(std::stoi(val));
+        root->left = deserializeHelper(nodes);
+        root->right = deserializeHelper(nodes);
+        return root;
+    }
+};
+
+// Helper function to create a new tree node.
+TreeNode* newNode(int val) {
+    TreeNode* node = new TreeNode(val);
+    node->left = node->right = NULL;
+    return node;
+}
+
+// Helper function to print the tree (in-order traversal) for testing purposes.
+void printTree(TreeNode* root) {
+    if (!root) return;
+    printTree(root->left);
+    std::cout << root->val << " ";
+    printTree(root->right);
+}
+
+int main() {
+    // Creating a sample binary tree:
+    //        1
+    //       / \
+    //      2   3
+    //     / \
+    //    4   5
+    TreeNode* root = newNode(1);
+    root->left = newNode(2);
+    root->right = newNode(3);
+    root->left->left = newNode(4);
+    root->left->right = newNode(5);
+
+    Codec codec;
+    std::string serialized = codec.serialize(root);
+    std::cout << "Serialized tree: " << serialized << std::endl;
+
+    TreeNode* deserialized = codec.deserialize(serialized);
+    std::cout << "Deserialized tree (in-order traversal): ";
+    printTree(deserialized);
+    std::cout << std::endl;
+
+    // Clean up memory (delete the tree nodes).
+    // Note: Proper cleanup should be done using a tree traversal.
+    delete root->left->left;
+    delete root->left->right;
+    delete root->left;
+    delete root->right;
+    delete root;
+
+    return 0;
+}
