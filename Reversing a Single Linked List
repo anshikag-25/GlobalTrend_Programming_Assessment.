@@ -1,0 +1,51 @@
+#include <iostream>
+         using namespace std;
+// Definition of a ListNode
+struct ListNode {
+    int value;
+    ListNode* next;
+// Constructor to initialize 
+ ListNode(int val) : value(val), next(nullptr) {}
+};
+// Function to reverse a singly linked list
+ListNode* reverseLinkedList(ListNode* head) {
+    ListNode* prev = nullptr;
+    ListNode* current = head;
+    ListNode* next = nullptr;
+
+    while (current != nullptr) {
+        next = current->next;   
+        current->next = prev;   
+        prev = current;         
+        current = next;
+    }
+    return prev;   // New head of the reversed list
+}
+// Function to print a linked list
+void printList(ListNode* head) {
+    ListNode* current = head;
+    while (current != nullptr) {
+        cout << current->value << " ";
+        current = current->next;
+    }
+    cout << endl;
+}
+// Main function to test the reverseLinkedList function
+int main() {
+    // Example usage
+    ListNode* head = new ListNode(1);
+    head->next = new ListNode(2);
+    head->next->next = new ListNode(3);
+    head->next->next->next = new ListNode(4);
+    head->next->next->next->next = new ListNode(5);
+
+    cout << "Original list: ";
+    printList(head);
+
+    ListNode* reversedHead = reverseLinkedList(head);
+
+    cout << "Reversed list: ";
+    printList(reversedHead);
+
+    return 0;
+}
