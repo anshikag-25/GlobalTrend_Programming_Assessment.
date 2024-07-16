@@ -1,0 +1,68 @@
+#include <iostream>
+#include <algorithm>
+#include <climits>
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+class Solution {
+public:
+    int maxPathSum(TreeNode* root) {
+        int maxSum = INT_MIN;
+        maxPathSumHelper(root, maxSum);
+        return maxSum;
+    }
+
+private:
+    int maxPathSumHelper(TreeNode* node, int& maxSum) {
+        if (!node) return 0;
+
+        // Recursively get the maximum path sum of the left and right subtrees.
+        int leftSum = std::max(0, maxPathSumHelper(node->left, maxSum));
+        int rightSum = std::max(0, maxPathSumHelper(node->right, maxSum));
+
+        // Update the global maximum path sum if the current path sum is larger.
+        maxSum = std::max(maxSum, node->val + leftSum + rightSum);
+
+        // Return the maximum path sum including the current node and one of its subtrees.
+        return node->val + std::max(leftSum, rightSum);
+    }
+};
+
+// Helper function to create a new tree node.
+TreeNode* newNode(int val) {
+    TreeNode* node = new TreeNode(val);
+    node->left = node->right = NULL;
+    return node;
+}
+
+int main() {
+    // Creating a sample binary tree:
+    //        1
+    //       / \
+    //      2   3
+    //     / \
+    //    4   5
+    TreeNode* root = newNode(1);
+    root->left = newNode(2);
+    root->right = newNode(3);
+    root->left->left = newNode(4);
+    root->left->right = newNode(5);
+
+    Solution solution;
+    std::cout << "The maximum path sum is: " << solution.maxPathSum(root) << std::endl;
+
+    // Clean up memory (delete the tree nodes).
+    delete root->left->left;
+    delete root->left->right;
+    delete root->left;
+    delete root->right;
+    delete root;
+
+    return 0;
+}
