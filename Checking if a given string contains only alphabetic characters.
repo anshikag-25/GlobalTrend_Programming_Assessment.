@@ -1,0 +1,22 @@
+#include <iostream>
+#include <string>
+
+bool isAlphabetic(const std::string& str) {
+    for (char c : str) {
+        if (!isalpha(c)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+int main() {
+    std::string testString = "HelloWorld";
+    if (isAlphabetic(testString)) {
+        std::cout << testString << " contains only alphabetic characters." << std::endl;
+    } else {
+        std::cout << testString << " contains non-alphabetic characters." << std::endl;
+    }
+
+    return 0;
+}
